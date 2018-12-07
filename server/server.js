@@ -21,9 +21,9 @@ app.use(express.static(publicPath))
 io.on("connection", (socket)=>{
   console.log("new user connected ")
 
-  socket.on("disconnect", ()=>[
+  socket.on("disconnect", ()=>{
     console.log("client disconnected")
-  ])
+  })
 })
 
 
