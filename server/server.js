@@ -22,14 +22,19 @@ io.on("connection", (socket)=>{
   console.log("new user connected ")
 
 
-  socket.emit("newMessage", {
-    from: "superkibbkes",
-    text: "Hi, lets meet tomorrow",
-    createdAt: new Date()
-  })
+  // socket.emit("newMessage", {
+  //   from: "superkibbkes",
+  //   text: "Hi, lets meet tomorrow",
+  //   createdAt: new Date()
+  // })
 
   socket.on("createdMessage", function(message){
     console.log("messageCreated", message)
+    io.emit("newMessage",{
+      from : message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    })
   })
 
   socket.on("disconnect", ()=>{
