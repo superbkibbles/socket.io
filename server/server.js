@@ -28,6 +28,18 @@ io.on("connection", (socket)=>{
   //   createdAt: new Date()
   // })
 
+  socket.emit("newMessage", {
+    from: "Admin",
+    text: "welcome to the appchat",
+    createdAt: new Date().getTime()
+  })
+
+  socket.broadcast.emit("newMessage", {
+    from : "Admin",
+    text: "new user joined",
+    createdAt: new Date().getTime()
+  })
+
   socket.on("createdMessage", function(message){
     console.log("messageCreated", message)
     io.emit("newMessage",{
@@ -35,6 +47,11 @@ io.on("connection", (socket)=>{
       text: message.text,
       createdAt: new Date().getTime()
     })
+      // socket.broadcast.emit("newMessage", {
+      //   from : message.from,
+      //   text: message.text,
+      //   createdAt: new Date().getTime()
+      // })
   })
 
   socket.on("disconnect", ()=>{
