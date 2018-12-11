@@ -22,7 +22,6 @@ app.use(express.static(publicPath))
 io.on("connection", (socket)=>{
   console.log("new user connected ")
 
-
   // socket.emit("newMessage", {
   //   from: "superkibbkes",
   //   text: "Hi, lets meet tomorrow",
@@ -33,8 +32,10 @@ io.on("connection", (socket)=>{
 
   socket.broadcast.emit("newMessage", generateMessage("Admin", "new user joined"))
 
-  socket.on("createdMessage", function(message){
+  socket.on("createdMessage", function(message, callback){
     console.log("messageCreated", message)
+
+
     io.emit("newMessage", generateMessage(message.from, message.text)
     // {
     //   from : message.from,
@@ -47,6 +48,8 @@ io.on("connection", (socket)=>{
       //   text: message.text,
       //   createdAt: new Date().getTime()
       // })
+      callback("this is from the server")
+
   })
 
   socket.on("disconnect", ()=>{

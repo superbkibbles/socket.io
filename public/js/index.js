@@ -18,4 +18,11 @@ socket.on("newMessage", function(message){
   console.log("newMessage", message)
 })
 
+socket.emit("createdMessage", {
+  from: "Ali",
+  text: "Hi"
+}, function(data){
+  console.log(data)
+})
+
 // socket.on("newUser", )
