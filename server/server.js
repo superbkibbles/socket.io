@@ -4,7 +4,7 @@ const http = require("http")
 const express = require("express");
 const path = require("path")
 
-const {generateMessage} = require("./utils/messages.js")
+const {generateMessage, generateLocationMessage} = require("./utils/messages.js")
 const publicPath = path.join(__dirname, "../public")
 const app = express();
 var server = http.createServer(app)
@@ -34,22 +34,13 @@ io.on("connection", (socket)=>{
 
   socket.on("createdMessage", function(message, callback){
     console.log("messageCreated", message)
+    io.emit("newMessage", generateMessage(message.from, message.text))
+    callback("this is from the server")
+  })
 
-
-    io.emit("newMessage", generateMessage(message.from, message.text)
-    // {
-    //   from : message.from,
-    //   text: message.text,
-    //   createdAt: new Date().getTime()
-    // }
-    )
-      // socket.broadcast.emit("newMessage", {
-      //   from : message.from,
-      //   text: message.text,
-      //   createdAt: new Date().getTime()
-      // })
-      callback("this is from the server")
-
+  socket.on("createLocationMessage", function(coords){
+    console.log(coords.latitude, coords.longitude)
+    io.emit("newLocationMessage", generateLocationMessage("Admin", coords.latitude, coords.longitude))
   })
 
   socket.on("disconnect", ()=>{
