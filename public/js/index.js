@@ -30,31 +30,49 @@ socket.on("newLocationMessage", function(message){
 
 //jquery
 $("#message-form").on("submit", function(e){
-  e.preventDefault()
-
-  socket.emit("createdMessage", {
-    from: "user",
-    text: $("[name=message]").val()
-  }, function(){
-
-  })
+	e.preventDefault()
+	var messageTextBox = $("[name=message]")
+	
+	socket.emit("createdMessage", {
+		from: "user",
+		text: messageTextBox.val()
+	}, function(){
+		messageTextBox.val("")
+	})
 })
 
 //getting lcoation
 var locationBtn = $("#geolocationBtn")
 locationBtn.on("click", function(e){
-  e.preventDefault();
+	e.preventDefault();
+	
 
-  if(!navigator.geolocation){
-    return alert("geolocatin is not available")
-  }
-  navigator.geolocation.getCurrentPosition(function(pos){
-    // console.log(pos)
-    socket.emit("createLocationMessage", {
-      latitude: pos.coords.latitude,
-      longitude: pos.coords.longitude
-    })
-  }, function(){
-    alert("unable to fetch location")
-  })
+	if(!navigator.geolocation){
+		return alert("geolocatin is not available")
+	}
+	locationBtn.attr("disabled", "disabled").text("sending location ...");
+	
+	setTimeout(function(){
+		navigator.geolocation.getCurrentPosition(function(pos){
+		// console.log(pos)
+		locationBtn.removeAttr("disabled").text("send location!")
+		socket.emit("createLocationMessage", {
+			latitude: pos.coords.latitude,
+			longitude: pos.coords.longitude
+		})
+		}, function(){
+			locationBtn.removeBtn("disabled").text("send location!")
+			alert("unable to fetch location")
+		})	
+	},500)
+
 })
+
+
+
+
+
+
+
+
+
